@@ -1,3 +1,4 @@
+from UI import Ui_MainWindow
 import sqlite3
 import sys
 import sqlite3
@@ -17,10 +18,11 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
 import random
 
-class Example(QMainWindow):
+
+class Example(QMainWindow,Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui',self)
+        self.setupUi(self)
         self.pushButton.move(200, 200)
         self.pushButton.setFixedSize(100, 100)
         self.objects = []
@@ -30,7 +32,8 @@ class Example(QMainWindow):
     def new(self):
         r = random.randrange(20, 200)
         x, y = random.randrange(0, 500), random.randrange(0, 500)
-        self.objects.append([x, y, r])
+        r, g, b  = random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)
+        self.objects.append([x, y, r, [r, g, b]])
         self.update()
 
     def paintEvent(self, event):
@@ -42,6 +45,9 @@ class Example(QMainWindow):
 
     def drawFlag(self, qp):
         for i in self.objects:
+            br =  QBrush(Qt.gray, Qt.SolidPattern)
+            br.setColor(QColor(*i[3]));
+            qp.setBrush(br)
             qp.drawEllipse(i[0], i[1], i[2], i[2])
 
 if __name__ == '__main__':
